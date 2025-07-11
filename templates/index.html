@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>{{ data.welcome_message }}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+  <!-- background music -->
+  <audio id="bgm" autoplay loop>
+    <source src="{{ url_for('static', filename='music/' + data.music) }}" type="audio/mpeg">
+  </audio>
+
+  <div class="hearts"></div>
+
+  <section class="welcome">
+    <h1>{{ data.welcome_message }}</h1>
+    <p>With love, for {{ data.name }}</p>
+  </section>
+
+  <section class="gallery">
+    <h2> Memories Always stays 📸</h2>
+    {% for img in data.images %}
+      <img src="{{ url_for('static', filename='images/' + img) }}" class="photo">
+    {% endfor %}
+  </section>
+
+  <section class="letter">
+    <h2>Love Letter 💌</h2>
+    <p>{{ data.love_letter }}</p>
+  </section>
+
+  <section class="video">
+    <h2>Special Message 🎥</h2>
+    <video width="300" controls>
+      <source src="{{ url_for('static', filename='video/' + data.video) }}" type="video/mp4">
+    </video>
+  </section>
+
+  <!-- Cake ceremony -->
+  <section class="cake">
+  <h2>Tap the Cake to Cut 🎂</h2>
+
+  
+  <div id="cake-box">
+    <!-- Cake image -->
+    <img src="{{ url_for('static', filename='images/cake.png') }}" id="cakeImg" alt="Cake">
+
+    <!-- Knife SVG animation -->
+    <svg id="knife" viewBox="0 0 160 40">
+      <rect x="0" y="18" width="140" height="4"  rx="2" fill="#bbb"/>
+      <rect x="140" y="14" width="18" height="12" rx="3" fill="#654321"/>
+    </svg>
+
+    <!-- Voice clip -->
+    <audio id="cakeVoice" src="{{ url_for('static', filename='music/cake_voice.mp3') }}"></audio>
+  </div>
+</section>
+
+<section class = "Take selfie">
+    <button id="cutBtn"> &amp;Take another memory</button>
+    <video id="preview" autoplay playsinline hidden></video>
+    <canvas id="snapshot" hidden></canvas>
+  </section>
+
+  <section class="countdown">
+    <h2>Countdown to Next Birthday 🎉</h2>
+    <p id="timer">Loading...</p>
+  </section>
+
+  <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>
