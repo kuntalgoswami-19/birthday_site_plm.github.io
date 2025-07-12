@@ -1,16 +1,44 @@
 body{
   margin:0;font-family:"Segoe UI",sans-serif;
-  background:linear-gradient(to bottom,#ffe0f0,#ffffff);
+  background:linear-gradient(to bottom,#e9e0ff,#ffffff);
   overflow-x:hidden;
 }
 section{padding:40px;text-align:center;}
 h1,h2{color:#e91e63;}
-.photo{width:200px;margin:10px;border-radius:15px;box-shadow:0 0 15px #ff69b4;}
+.photo{width:200px;margin:10px;border-radius:15px;box-shadow:0 0 15px #4d359e;}
 .letter,.video,.countdown{background:#fff0f5;border-radius:20px;margin:20px;padding:20px;box-shadow:0 0 10px #ffb6c1;}
-.hearts{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:10;}
-.heart{width:20px;height:20px;background:red;position:absolute;top:-10px;animation:fall 4s linear infinite;transform:rotate(45deg);border-radius:0 50% 50% 50%;}
-.heart::after{content:'';position:absolute;width:20px;height:20px;background:red;border-radius:60%;top:-10px;left:0;}
-@keyframes fall{0%{transform:translateY(0) rotate(45deg);opacity:1;}100%{transform:translateY(100vh) rotate(45deg);opacity:0;}}
+/* ------------ perfect floating hearts ---------------------------- */
+.heart {
+  position: fixed;
+  top: -40px;
+  left: 0;
+  width: calc(var(--d) * 1px);
+  height: calc(var(--d) * 1px);
+  background: #ff4d6d;
+  transform: rotate(45deg);
+  transform-origin: center;
+  animation: float 6s linear forwards;
+  opacity: 0.9;
+}
+
+.heart::before,
+.heart::after {
+  content: '';
+  position: absolute;
+  width: calc(var(--d) * 1px);
+  height: calc(var(--d) * 1px);
+  background: #ff4d6d;
+  border-radius: 50%;
+}
+
+.heart::before { top: -50%; left: 0; }
+.heart::after  { left: -50%; top: 0; }
+
+@keyframes float {
+  0%   { transform: translateY(0) rotate(45deg) scale(1);   opacity: 0.9; }
+  80%  { opacity: 0.3; }
+  100% { transform: translateY(110vh) rotate(45deg) scale(1); opacity: 0; }
+}
 
 /* cake styles */
 .cake{margin-top:40px;}
@@ -57,3 +85,88 @@ video#preview,canvas#snapshot{width:260px;margin-top:15px;border-radius:12px;box
   60% { transform: translateX( 4px) rotate( 1deg); }
  100% { transform:none; }
 }
+#glitterCanvas {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 50;
+}
+
+/* Full-screen glitter canvas */
+#glitterCanvas{
+  position:fixed;inset:0;pointer-events:none;z-index:50;
+}
+@keyframes growOnce {
+  0%   { transform: scale(0.3); opacity: 0; }
+  70%  { transform: scale(1.1); opacity: 1; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.grow-big {
+  animation: growOnce 0.9s ease-out forwards;
+}
+/* ---------- Cake cut animation ------------------- */
+#cakeBox{
+  position:relative;
+  width:300px;               /* ⬅ adjust to your cake.png width */
+  margin:40px auto;
+  cursor:pointer;
+}
+
+#cakeWhole, #cakeSlice{
+  width:100%; display:block;
+  transition: opacity .3s ease;
+}
+
+#cakeSlice{
+  position:absolute; inset:0;
+  /* triangular clip – looks like 1/6th slice */
+  clip-path: polygon(50% 50%,100% 30%,100% 70%);
+  opacity:0;                   /* hidden until cut */
+  transform: translateX(0);     /* will slide later */
+  transition: transform 1s ease, opacity .4s ease .6s;
+}
+
+#knife{
+  position:absolute;
+  width:200px; top:-60px; left:-220px;      /* start far left & above */
+  transform:rotate(0deg);
+  transition: transform 1.2s ease, left 1.2s ease, top 1.2s ease;
+  pointer-events:none;
+}
+
+/* ---- Active state (after click) ---- */
+#cakeBox.cut #knife{
+  left:120px; top:20px;              /* sweep across & down through cake */
+  transform:rotate(10deg);
+}
+
+#cakeBox.cut #cakeSlice{
+  opacity:1;
+  transform: translateX(140px) rotate(3deg);   /* slice slides out */
+}
+/* knife image – behaves like old SVG */
+#knife{
+  position: absolute;
+  width: 200px;                    /* ← scale as needed */
+  top: -120px;                     /* start high above the cake */
+  left: calc(50% - 100px);         /* horizontally centered */
+  transform: rotate(0deg);
+  transition: top 0.8s ease, transform 0.25s ease 0.8s;
+  pointer-events: none;
+  z-index: 10;
+}
+/* final position when #cakeBox gains .cut */
+#cakeBox.cut #knife{
+  top: 140px;                      /* blade goes into cake */
+  transform: rotate(12deg);
+}
+
+
+#cakeBox.cut #knife{
+  /* final blade position: tip roughly 40 % down the cake */
+  top:140px;                 /* adjust if needed */
+  transform:rotate(12deg);
+}
+
+
